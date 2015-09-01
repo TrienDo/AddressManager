@@ -1,8 +1,10 @@
-package demo;
+package uk.ac.addressmanger;
 
 import java.io.IOException;
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -12,7 +14,11 @@ import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.security.SecurityProperties;
@@ -24,17 +30,26 @@ import org.springframework.security.web.csrf.CsrfFilter;
 import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.security.web.csrf.CsrfTokenRepository;
 import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.util.WebUtils;
 
+import uk.ac.addressmanger.dataservice.AddressDao;
+import uk.ac.addressmanger.model.Address;
+
 @SpringBootApplication
 @RestController
-public class AddressManagerApplication {
+@Produces(MediaType.APPLICATION_JSON)
+@Consumes(MediaType.APPLICATION_JSON)
+public class AddressManagerApplication{
 
-    public static void main(String[] args) {
+	@Autowired
+	private AddressDao addressDao;
+	
+	public static void main(String[] args) {
         SpringApplication.run(AddressManagerApplication.class, args);
     }
     //http://stackoverflow.com/questions/8597902/spring-security-user-account-registration-creation-and-management
@@ -47,12 +62,17 @@ public class AddressManagerApplication {
     	return "hello user";
     }
     
-    @RequestMapping(value = "/addresses", produces="application/json",  method = RequestMethod.GET)
-   	public Map<String, Object>  getAddresses() {
-    	Map<String, Object> model = new HashMap<String, Object>();
-		model.put("id", "11");
-		model.put("content", "Castle Park Mews");
-		return model;
+    @RequestMapping(value = "/addresses", method = RequestMethod.GET)
+   	public List<Address>  getAddresses() {
+    	List<Address> allAddresses = new ArrayList<Address>();
+		allAddresses = (List<Address>) addressDao.findAll();
+		return allAddresses;
+   	}
+    
+    @RequestMapping(value = "/addresses", method = RequestMethod.POST)    
+   	public List<Address> addAddresses(@RequestBody final Address address) {
+    	addressDao.save(address);
+    	return (List<Address>) addressDao.findAll();
    	}
     
     @RequestMapping("/user")
@@ -75,7 +95,7 @@ public class AddressManagerApplication {
 		@Override
 		protected void configure(HttpSecurity http) throws Exception {
 			http.httpBasic().and().authorizeRequests()
-					.antMatchers("/index.html", "/home.html", "/login.html", "/addresses.html", "/").permitAll().anyRequest()
+					.antMatchers("/index.html", "/home.html", "/login.html", "/").permitAll().anyRequest()
 					.authenticated().and().csrf()
 					.csrfTokenRepository(csrfTokenRepository()).and()
 					.addFilterAfter(csrfHeaderFilter(), CsrfFilter.class);

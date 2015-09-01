@@ -10,7 +10,7 @@ angular
 						templateUrl : 'login.html',
 						controller : 'navigation'
 					}).when('/addresses', {
-						templateUrl : 'home.html',
+						templateUrl : 'address.html',
 						controller : 'addresses'
 					}).otherwise('/');
 
@@ -84,8 +84,22 @@ angular
 					$http.get('/resource/').success(function(data) {
 					$scope.greeting = data;
 				})
+			}).controller('addNewAddressController', function($scope, $http) {
+					$scope.submit = function() {					
+						var addressObj = {
+							number : $scope.address.number,
+							street : $scope.address.street,
+							city : $scope.address.city,	
+							postcode : $scope.address.postcode,
+							country : $scope.address.country
+						};
+						$http.post('/addresses/', addressObj).success(function(data) {
+							$scope.addresses = data;
+							//$route.reload()
+						});
+					}
 			}).controller('addresses', function($scope, $http) {
 					$http.get('/addresses/').success(function(data) {
-					$scope.greeting = data;
+					$scope.addresses = data;
 				})
 			});

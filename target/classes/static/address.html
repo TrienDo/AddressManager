@@ -1,0 +1,36 @@
+<div ng-show="authenticated">
+	<h1>Your current addresses</h1>
+	<table>
+	  <tr ng-repeat="add in addresses">
+	  	<td>{{ add.id }}</td>
+	    <td>{{ add.number }}</td>
+	    <td>{{ add.street }}</td>
+	    <td>{{ add.city }}</td>
+	    <td>{{ add.postcode }}</td>
+	    <td>{{ add.country }}</td>
+	  </tr>
+	</table>
+	
+	
+	
+	<hr/>
+	<form novalidate ng-submit="submit()" ng-controller="addNewAddressController">
+	    Property number/name:<br>
+	    <input type="text" ng-model="address.number"><br>
+	    Street:<br>
+	    <input type="text" ng-model="address.street"><br>
+	    City/Town:<br>
+	    <input type="text" ng-model="address.city"><br>
+	    Postcode:<br>
+	    <input type="text" ng-model="address.postcode"><br>
+	    Country:<br>
+	    <input type="text" ng-model="address.country"><br>
+	    <br>
+	    <button ng-click="reset()">RESET</button>
+	    <input type="submit" id="submit" value="Submit" />
+  	</form>
+	
+</div>
+<div  ng-show="!authenticated">
+	<p>Login to see your addresses</p>
+</div>
