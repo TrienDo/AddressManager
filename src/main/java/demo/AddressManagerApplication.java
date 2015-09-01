@@ -39,6 +39,7 @@ public class AddressManagerApplication {
     }
     //http://stackoverflow.com/questions/8597902/spring-security-user-account-registration-creation-and-management
     //http://www.coderanch.com/t/599790/ORM/databases/User-Registration-Login-Hibernate
+    //http://jasonwatmore.com/post/2015/03/10/AngularJS-User-Registration-and-Login-Example.aspx
     
     @RequestMapping(value="/userAu", method = RequestMethod.GET)
     public String getUser()
@@ -46,9 +47,12 @@ public class AddressManagerApplication {
     	return "hello user";
     }
     
-    @RequestMapping("/addresses")
-   	public String getAddresses() {
-   		return "This is my address from REST";
+    @RequestMapping(value = "/addresses", produces="application/json",  method = RequestMethod.GET)
+   	public Map<String, Object>  getAddresses() {
+    	Map<String, Object> model = new HashMap<String, Object>();
+		model.put("id", "11");
+		model.put("content", "Castle Park Mews");
+		return model;
    	}
     
     @RequestMapping("/user")
@@ -71,7 +75,7 @@ public class AddressManagerApplication {
 		@Override
 		protected void configure(HttpSecurity http) throws Exception {
 			http.httpBasic().and().authorizeRequests()
-					.antMatchers("/index.html", "/home.html", "/login.html", "/").permitAll().anyRequest()
+					.antMatchers("/index.html", "/home.html", "/login.html", "/addresses.html", "/").permitAll().anyRequest()
 					.authenticated().and().csrf()
 					.csrfTokenRepository(csrfTokenRepository()).and()
 					.addFilterAfter(csrfHeaderFilter(), CsrfFilter.class);
