@@ -1,6 +1,6 @@
 <div ng-show="authenticated">
 	<h1>Your current addresses</h1>
-	<table>
+	<table st-table="addresses" st-safe-src="rowCollection" class="table table-striped">
 	  <tr ng-repeat="add in addresses">
 	  	<td>{{ add.id }}</td>
 	    <td>{{ add.number }}</td>
@@ -26,8 +26,9 @@
 	    Country:<br>
 	    <input type="text" ng-model="address.country"><br>
 	    <br>
-	    <button ng-click="reset()">RESET</button>
-	    <input type="submit" id="submit" value="Submit" />
+	    <button class="btn btn-success" ng-click="reset()"><span class="glyphicon glyphicon-refresh"></span>  Reset</button>
+	    <button id="submit" value="Submit" class="btn btn-success" ng-disabled="error || incomplete">
+			<span class="glyphicon glyphicon-save"></span>  Save Address</button>	    
   	</form>
 	
 </div>

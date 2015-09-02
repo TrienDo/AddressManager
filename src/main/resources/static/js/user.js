@@ -1,5 +1,5 @@
 angular
-		.module('hello', [ 'ngRoute' ])
+		.module('hello', ['ngRoute'])
 		.config(
 				function($routeProvider, $httpProvider) {
 
@@ -84,7 +84,7 @@ angular
 					$http.get('/resource/').success(function(data) {
 					$scope.greeting = data;
 				})
-			}).controller('addNewAddressController', function($scope, $http) {
+			}).controller('addNewAddressController', function($scope, $http, $route) {
 					$scope.submit = function() {					
 						var addressObj = {
 							number : $scope.address.number,
@@ -95,7 +95,7 @@ angular
 						};
 						$http.post('/addresses/', addressObj).success(function(data) {
 							$scope.addresses = data;
-							//$route.reload()
+							$route.reload()
 						});
 					}
 			}).controller('addresses', function($scope, $http) {
