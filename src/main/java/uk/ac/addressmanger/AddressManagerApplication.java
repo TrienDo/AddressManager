@@ -15,6 +15,9 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
@@ -30,6 +33,7 @@ import org.springframework.security.web.csrf.CsrfFilter;
 import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.security.web.csrf.CsrfTokenRepository;
 import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -71,6 +75,25 @@ public class AddressManagerApplication{
     
     @RequestMapping(value = "/addresses", method = RequestMethod.POST)    
    	public List<Address> addAddresses(@RequestBody final Address address) {
+    	addressDao.save(address);
+    	return (List<Address>) addressDao.findAll();
+   	}
+    //@RequestMapping(value ="/removeUserRole/{roleId}", method = RequestMethod.DELETE)
+    //public void removeUserRole(@PathVariable("roleId")Long roleId){
+    //@DELETE
+    //@RequestMapping("/addresses")        
+    //@Path("/{addressId}")
+    @RequestMapping(value ="/addresses/{addressId}", method = RequestMethod.DELETE)
+    //User PathVar rather than PathParam
+   	public List<Address> deleteAddresses(@PathVariable("addressId") long id) {
+    	addressDao.delete(id);
+    	return (List<Address>) addressDao.findAll();
+   	}
+    
+    @RequestMapping(value ="/addresses/{addressId}", method = RequestMethod.PUT)
+    //Order of params is important: PathVariable must stand before @RequestBody
+   	public List<Address> updateAddresses(@PathVariable("addressId") long id, @RequestBody final Address address) {
+    	address.setId(id);
     	addressDao.save(address);
     	return (List<Address>) addressDao.findAll();
    	}

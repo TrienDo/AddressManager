@@ -93,13 +93,56 @@ angular
 							postcode : $scope.address.postcode,
 							country : $scope.address.country
 						};
-						$http.post('/addresses/', addressObj).success(function(data) {
-							$scope.addresses = data;
-							$route.reload()
-						});
-					}
-			}).controller('addresses', function($scope, $http) {
+						if($scope.selectedId!=-1)
+						{
+							$http.put('/addresses/'+ $scope.selectedId, addressObj).success(function(data) {
+								$scope.addresses = data;
+								$route.reload();
+							});
+						}
+						else
+						{
+							$http.post('/addresses/', addressObj).success(function(data) {
+								$scope.addresses = data;
+								$route.reload();
+							});
+						}	
+						
+					};		
+
+			}).controller('addresses', function($scope, $http, $route) {
+				
 					$http.get('/addresses/').success(function(data) {
 					$scope.addresses = data;
+					$scope.selectedId = -1;
+					$scope.address = {
+							number : "",
+							street : "",
+							city : "",	
+							postcode : "",
+							country : ""
+						};
+					$scope.deleteAddress = function(id) {
+						$http.delete('/addresses/' + id).success(function(data) {
+							$scope.addresses = data;  					     
+							$route.reload();
+						});
+					  
+					};
+					$scope.editAddress = function(id) {
+						//find the address
+						for(i=0; i <$scope.addresses.length; i++)
+							if($scope.addresses[i].id == id)
+							{
+							    $scope.address.number = $scope.addresses[i].number; 
+							    $scope.address.street = $scope.addresses[i].street;
+							    $scope.address.city = $scope.addresses[i].city; 
+							    $scope.address.postcode = $scope.addresses[i].postcode;
+							    $scope.address.country = $scope.addresses[i].country;
+							    $scope.selectedId = id;
+							    break;
+							}
+					   
+					};
 				})
 			});

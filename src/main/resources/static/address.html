@@ -8,6 +8,10 @@
 	    <td>{{ add.city }}</td>
 	    <td>{{ add.postcode }}</td>
 	    <td>{{ add.country }}</td>
+	    <td>
+	    	<button ng-click="editAddress(add.id)" class="btn"><span class="glyphicon glyphicon-edit"></span>  Edit</button>
+	    	<button ng-click="deleteAddress(add.id)" class="btn"><span class="glyphicon glyphicon-remove"></span>  Delete</button>
+		</td>
 	  </tr>
 	</table>
 	

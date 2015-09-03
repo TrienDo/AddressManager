@@ -14,6 +14,6 @@ public interface  AddressDao extends CrudRepository<Address, Long> {
 	   * 
 	   * @param email the user email.
 	   */
-	  public Address findById(int id);
+	  public Address findById(long id);
 
 } // class UserDao
