@@ -15,6 +15,9 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
@@ -30,6 +33,7 @@ import org.springframework.security.web.csrf.CsrfFilter;
 import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.security.web.csrf.CsrfTokenRepository;
 import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -37,8 +41,10 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.util.WebUtils;
 
-import uk.ac.addressmanger.dataservice.AddressDao;
+import uk.ac.addressmanger.dataservice.AddressRepository;
+import uk.ac.addressmanger.dataservice.UserRepository;
 import uk.ac.addressmanger.model.Address;
+import uk.ac.addressmanger.model.User;
 
 @SpringBootApplication
 @RestController
@@ -47,7 +53,9 @@ import uk.ac.addressmanger.model.Address;
 public class AddressManagerApplication{
 
 	@Autowired
-	private AddressDao addressDao;
+	private AddressRepository addressDao;
+	@Autowired
+	private UserRepository userDao;
 	
 	public static void main(String[] args) {
         SpringApplication.run(AddressManagerApplication.class, args);
@@ -56,11 +64,32 @@ public class AddressManagerApplication{
     //http://www.coderanch.com/t/599790/ORM/databases/User-Registration-Login-Hibernate
     //http://jasonwatmore.com/post/2015/03/10/AngularJS-User-Registration-and-Login-Example.aspx
     
-    @RequestMapping(value="/userAu", method = RequestMethod.GET)
-    public String getUser()
+    @RequestMapping(value="/users", method = RequestMethod.GET)
+    public List<User> getUsers()
     {
-    	return "hello user";
+    	List<User> allUsers = new ArrayList<User>();
+    	allUsers = (List<User>) userDao.findAll();
+		return null;
     }
+    
+    @RequestMapping(value="/login?logout", method = RequestMethod.GET)
+    public String login()
+    {
+		return "Do you wanna log in again";
+    }
+    
+    @RequestMapping(value = "/users", method = RequestMethod.POST)    
+   	public User addUser(@RequestBody final User user) {
+    	User newUser = User.createUser(user.getUsername(), user.getEmail(), user.getPassword());
+    	return userDao.save(newUser);
+   	}
+    
+    @RequestMapping(value = "/addressOne", method = RequestMethod.GET)
+   	public Address  getAddressOne() {
+    	List<Address> allAddresses = new ArrayList<Address>();
+		allAddresses = (List<Address>) addressDao.findAll();
+		return allAddresses.get(0);
+   	}
     
     @RequestMapping(value = "/addresses", method = RequestMethod.GET)
    	public List<Address>  getAddresses() {
@@ -71,6 +100,25 @@ public class AddressManagerApplication{
     
     @RequestMapping(value = "/addresses", method = RequestMethod.POST)    
    	public List<Address> addAddresses(@RequestBody final Address address) {
+    	addressDao.save(address);
+    	return (List<Address>) addressDao.findAll();
+   	}
+    //@RequestMapping(value ="/removeUserRole/{roleId}", method = RequestMethod.DELETE)
+    //public void removeUserRole(@PathVariable("roleId")Long roleId){
+    //@DELETE
+    //@RequestMapping("/addresses")        
+    //@Path("/{addressId}")
+    @RequestMapping(value ="/addresses/{addressId}", method = RequestMethod.DELETE)
+    //User PathVar rather than PathParam
+   	public List<Address> deleteAddresses(@PathVariable("addressId") long id) {
+    	addressDao.delete(id);
+    	return (List<Address>) addressDao.findAll();
+   	}
+    
+    @RequestMapping(value ="/addresses/{addressId}", method = RequestMethod.PUT)
+    //Order of params is important: PathVariable must stand before @RequestBody
+   	public List<Address> updateAddresses(@PathVariable("addressId") long id, @RequestBody final Address address) {
+    	address.setId(id);
     	addressDao.save(address);
     	return (List<Address>) addressDao.findAll();
    	}
@@ -88,6 +136,7 @@ public class AddressManagerApplication{
 		return model;
 	}
 
+	/*
 	
 	@Configuration
 	@Order(SecurityProperties.ACCESS_OVERRIDE_ORDER)
@@ -130,4 +179,5 @@ public class AddressManagerApplication{
 			return repository;
 		}
 	}
+	*/
 }
