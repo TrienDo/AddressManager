@@ -41,8 +41,10 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.util.WebUtils;
 
-import uk.ac.addressmanger.dataservice.AddressDao;
+import uk.ac.addressmanger.dataservice.AddressRepository;
+import uk.ac.addressmanger.dataservice.UserRepository;
 import uk.ac.addressmanger.model.Address;
+import uk.ac.addressmanger.model.User;
 
 @SpringBootApplication
 @RestController
@@ -51,7 +53,9 @@ import uk.ac.addressmanger.model.Address;
 public class AddressManagerApplication{
 
 	@Autowired
-	private AddressDao addressDao;
+	private AddressRepository addressDao;
+	@Autowired
+	private UserRepository userDao;
 	
 	public static void main(String[] args) {
         SpringApplication.run(AddressManagerApplication.class, args);
@@ -60,11 +64,19 @@ public class AddressManagerApplication{
     //http://www.coderanch.com/t/599790/ORM/databases/User-Registration-Login-Hibernate
     //http://jasonwatmore.com/post/2015/03/10/AngularJS-User-Registration-and-Login-Example.aspx
     
-    @RequestMapping(value="/userAu", method = RequestMethod.GET)
-    public String getUser()
+    @RequestMapping(value="/users", method = RequestMethod.GET)
+    public List<User> getUsers()
     {
-    	return "hello user";
+    	List<User> allUsers = new ArrayList<User>();
+    	allUsers = (List<User>) userDao.findAll();
+		return allUsers;
     }
+    
+    @RequestMapping(value = "/users", method = RequestMethod.POST)    
+   	public User addUser(@RequestBody final User user) {
+    	User newUser = User.createUser(user.getUsername(), user.getEmail(), user.getPassword());
+    	return userDao.save(newUser);
+   	}
     
     @RequestMapping(value = "/addresses", method = RequestMethod.GET)
    	public List<Address>  getAddresses() {
@@ -111,6 +123,7 @@ public class AddressManagerApplication{
 		return model;
 	}
 
+	/*
 	
 	@Configuration
 	@Order(SecurityProperties.ACCESS_OVERRIDE_ORDER)
@@ -153,4 +166,5 @@ public class AddressManagerApplication{
 			return repository;
 		}
 	}
+	*/
 }

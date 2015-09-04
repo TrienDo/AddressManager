@@ -9,6 +9,9 @@ angular
 					}).when('/login', {
 						templateUrl : 'login.html',
 						controller : 'navigation'
+					}).when('/register', {
+						templateUrl : 'register.html',
+						controller : 'register'
 					}).when('/addresses', {
 						templateUrl : 'address.html',
 						controller : 'addresses'
@@ -110,7 +113,22 @@ angular
 						
 					};		
 
-			}).controller('addresses', function($scope, $http, $route) {
+			}).controller('register', function($scope, $http, $route) {
+				
+				$scope.register = function() {					
+					var userObj = {
+						username : $scope.user.username,
+						email : $scope.user.email,
+						password : $scope.user.password
+					};
+					 
+					$http.post('/users/', userObj).success(function(data) {
+						//$scope.addresses = data;
+						//$route.reload();
+					});
+				 
+				};		
+		}).controller('addresses', function($scope, $http, $route) {
 				
 					$http.get('/addresses/').success(function(data) {
 					$scope.addresses = data;
