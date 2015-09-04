@@ -14,7 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.csrf.CsrfFilter;
 import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.security.web.csrf.CsrfTokenRepository;
-//http://shruubi.com/2014/12/03/spring-boot-hibernate-and-spring-security-a-step-in-the-right-direction-for-java/
+
 import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.util.WebUtils;
@@ -28,23 +28,21 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 //public class WebSecurityConfig {}
-
+//http://shruubi.com/2014/12/03/spring-boot-hibernate-and-spring-security-a-step-in-the-right-direction-for-java/
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
-
-    
 
     @Autowired
     private UserDetailsService customUserDetailsService;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.httpBasic().and().authorizeRequests()        
-        .antMatchers("/index.html", "/register.html", "/home.html", "/login.html", "/").permitAll().anyRequest()
-        .authenticated()
-        .and().csrf()
+        http.httpBasic().and().authorizeRequests()   
+        .antMatchers("/index.html", "/users/", "/register.html", "/home.html","/login.html", "/js/user.js", "/login?logout/", "/").permitAll().anyRequest()
+		.authenticated()
+		.and().csrf()
 		.csrfTokenRepository(csrfTokenRepository()).and()
 		.addFilterAfter(csrfHeaderFilter(), CsrfFilter.class);
 
@@ -56,10 +54,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .logout()
                 .logoutSuccessUrl("/logout")
                 .permitAll();*/
-        
-        
-		
-		
     }
       
 

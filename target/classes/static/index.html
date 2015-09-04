@@ -14,8 +14,8 @@
 	<div ng-controller="navigation" class="container">
 		<ul class="nav nav-pills" role="tablist">
 			<li ng-class="{active:tab('home')}"><a href="#/">Home</a></li>
-			<li><a href="#/login">Login</a></li>
-			<li ng-show="authenticated"><a href="#/register">Register</a></li>
+			<li ng-show="!authenticated"><a href="#/login">Login</a></li>
+			<li ng-show="!authenticated"><a href="#/register">Register</a></li>
 			<li ng-show="authenticated"><a href="" ng-click="logout()">Logout</a></li>
 			<li ng-show="authenticated"><a href="#/addresses">My Addresses</a></li>
 		</ul>

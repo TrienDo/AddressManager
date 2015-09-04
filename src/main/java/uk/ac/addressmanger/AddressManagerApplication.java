@@ -69,7 +69,13 @@ public class AddressManagerApplication{
     {
     	List<User> allUsers = new ArrayList<User>();
     	allUsers = (List<User>) userDao.findAll();
-		return allUsers;
+		return null;
+    }
+    
+    @RequestMapping(value="/login?logout", method = RequestMethod.GET)
+    public String login()
+    {
+		return "Do you wanna log in again";
     }
     
     @RequestMapping(value = "/users", method = RequestMethod.POST)    
