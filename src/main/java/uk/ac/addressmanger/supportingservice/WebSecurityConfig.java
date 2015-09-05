@@ -27,8 +27,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-//public class WebSecurityConfig {}
-//http://shruubi.com/2014/12/03/spring-boot-hibernate-and-spring-security-a-step-in-the-right-direction-for-java/
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
@@ -40,22 +38,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.httpBasic().and().authorizeRequests()   
-        .antMatchers("/index.html", "/users/", "/addressOne/", "/register.html", "/home.html","/login.html", "/js/user.js", "/login?logout/", "/").permitAll().anyRequest()
+        .antMatchers("/index.html","/resource","/favicon.ico", "/user", "/addressOne", "/register.html", "/home.html","/login.html", "/js/**", "/logout", "/login?logout", "/").permitAll().anyRequest()
 		.authenticated()
 		.and().csrf()
 		.csrfTokenRepository(csrfTokenRepository()).and()
 		.addFilterAfter(csrfHeaderFilter(), CsrfFilter.class);
-
-        /*http.formLogin()
-                .defaultSuccessUrl("/address.html")
-                .loginPage("/login.html")
-                .permitAll()
-                .and()
-                .logout()
-                .logoutSuccessUrl("/logout")
-                .permitAll();*/
     }
-      
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -69,7 +57,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		return encoder;
     }
     
-    //old
     private Filter csrfHeaderFilter() {
 		return new OncePerRequestFilter() {
 			@Override
@@ -99,11 +86,3 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		return repository;
 	}
 }
-
- 
-
-		
- 
-
-	
-

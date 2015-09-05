@@ -1,5 +1,12 @@
 <div ng-controller="register">
 <h3 >Please fill in the registration form below</h3>
+
+<div class="alert alert-danger" ng-show="error">
+	{{messageContent}}
+</div>
+<div class="alert alert-success" ng-show="!error">
+	{{messageContent}}
+</div>
  
 <form class="form-horizontal" ng-submit="register()" >
   <div class="form-group">
