@@ -1,8 +1,14 @@
 package uk.ac.addressmanger.model;
 
+import javax.persistence.Embeddable;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.Transient;
+import javax.xml.bind.annotation.XmlTransient;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 public class Address {
@@ -13,7 +19,10 @@ public class Address {
 	private String street;
 	private String city;
 	private String postcode;
-	private String country;
+	private String country; 
+	
+	@ManyToOne	
+	private User user;
 	
 	public Address()
 	{
@@ -65,5 +74,15 @@ public class Address {
 	}
 	public void setCountry(String country) {
 		this.country = country;
-	}	
+	}
+	
+	//@XmlTransient
+	@JsonIgnore
+	public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
 }

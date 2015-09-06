@@ -3,9 +3,9 @@
 var addressModule = angular.module('addressModule', []);
 
 addressModule.controller('addressController', function($scope, $http, $route) {
-	
+	$scope.addressAPI = '/users/' + $scope.userId + '/addresses/';
 	//onload -> Get all addresses
-	$http.get('/addresses').success(function(data) {
+	$http.get($scope.addressAPI).success(function(data) {
 		$scope.addresses = data;
 		$scope.selectedId = -1;//mark to know which actions: -1: new address, else: edit an address with selectedId
 		
@@ -37,7 +37,7 @@ addressModule.controller('addressController', function($scope, $http, $route) {
 
 	//when delete button is clicked
 	$scope.deleteAddress = function(id) {
-		$http.delete('/addresses/' + id).success(function(data) {
+		$http.delete($scope.addressAPI + id).success(function(data) {
 			$scope.addresses = data;  					     
 			$route.reload();
 		});
@@ -54,14 +54,14 @@ addressModule.controller('addressController', function($scope, $http, $route) {
 		};
 		if($scope.selectedId!=-1)
 		{
-			$http.put('/addresses/'+ $scope.selectedId, addressObj).success(function(data) {
+			$http.put($scope.addressAPI+ $scope.selectedId, addressObj).success(function(data) {
 				$scope.addresses = data;
 				$route.reload();
 			});
 		}
 		else
 		{
-			$http.post('/addresses', addressObj).success(function(data) {
+			$http.post($scope.addressAPI, addressObj).success(function(data) {
 				$scope.addresses = data;
 				$route.reload();
 			});

@@ -15,36 +15,53 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import uk.ac.addressmanger.dataservice.AddressRepository;
+import uk.ac.addressmanger.dataservice.UserRepository;
 import uk.ac.addressmanger.model.Address;
+import uk.ac.addressmanger.model.User;
 
 @RestController
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-@RequestMapping("/addresses")
+//@RequestMapping("/addresses")
+//@RequestMapping("/")//sub-resource of user
+@RequestMapping("/users/{userId}/addresses")
 public class AddressResource {
-	@Autowired
+ 	@Autowired
+	private UserRepository userDao;
+ 	@Autowired
 	private AddressRepository addressDao;
+		
 	
-	@RequestMapping(value = "/addressOne", method = RequestMethod.GET)
-   	public Address  getAddressOne() {
-    	List<Address> allAddresses = new ArrayList<Address>();
-		allAddresses = (List<Address>) addressDao.findAll();
-		return allAddresses.get(0);
-   	}
-    
 	@RequestMapping(method = RequestMethod.GET)
-   	public List<Address>  getAddresses() {
-    	List<Address> allAddresses = new ArrayList<Address>();
-		allAddresses = (List<Address>) addressDao.findAll();
-		return allAddresses;
+   	public List<Address> getAddresses(@PathVariable("userId") long id) {
+    	return userDao.findById(id).getAddresses(); 
    	}
-    
+	
 	@RequestMapping(method = RequestMethod.POST)   
-   	public List<Address> addAddresses(@RequestBody final Address address) {
-    	addressDao.save(address);
-    	return (List<Address>) addressDao.findAll();
+   	public List<Address> addAddress(@PathVariable("userId") long id, @RequestBody final Address address) {
+		User user = userDao.findById(id);		
+		user.getAddresses().add(address);
+		address.setUser(user);
+		addressDao.save(address);
+		userDao.save(user);
+    	return user.getAddresses();
    	}
     
+	@RequestMapping(value ="/{addressId}", method = RequestMethod.PUT)//Order of params is important: PathVariable must stand before @RequestBody
+   	public List<Address> updateAddress(@PathVariable("userId") long userId, @PathVariable("addressId") long addressId, @RequestBody final Address address) {
+    	address.setId(addressId);
+    	address.setUser(userDao.findById(userId));
+    	addressDao.save(address);
+    	return userDao.findById(userId).getAddresses();
+   	} 
+	
+	@RequestMapping(value ="/{addressId}", method = RequestMethod.DELETE)
+   	public List<Address> deleteAddress(@PathVariable("userId") long userId, @PathVariable("addressId") long addressId) {    	 
+    	addressDao.delete(addressId);
+    	return userDao.findById(userId).getAddresses();
+   	} 
+	
+    /*
 	@RequestMapping(value ="/{addressId}", method = RequestMethod.GET)//User PathVar rather than PathParam
    	public Address getOneAddress(@PathVariable("addressId") long id) {
     	return (Address) addressDao.findById(id);
@@ -56,10 +73,13 @@ public class AddressResource {
     	return (List<Address>) addressDao.findAll();
    	}
     
-	@RequestMapping(value ="/{addressId}", method = RequestMethod.PUT)//Order of params is important: PathVariable must stand before @RequestBody
-   	public List<Address> updateAddresses(@PathVariable("addressId") long id, @RequestBody final Address address) {
-    	address.setId(id);
-    	addressDao.save(address);
-    	return (List<Address>) addressDao.findAll();
-   	}
+	
+	
+	@RequestMapping(value = "/addressOne", method = RequestMethod.GET)
+   	public Address  getAddressOne() {
+    	List<Address> allAddresses = new ArrayList<Address>();
+		allAddresses = (List<Address>) addressDao.findAll();
+		return allAddresses.get(0);
+   	}  
+   	*/  
 }

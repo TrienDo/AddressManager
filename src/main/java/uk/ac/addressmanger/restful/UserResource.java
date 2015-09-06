@@ -28,5 +28,11 @@ public class UserResource {
     {
     	List<User> allUsers = (List<User>) userDao.findAll();
     	return allUsers;
-    }	
+    }
+	 
+	/*@RequestMapping("/{userId}/addresses")
+    public AddressResource getAddressResource()
+    {
+    	return new AddressResource();
+    }*/	
 }

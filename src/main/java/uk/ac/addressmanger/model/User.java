@@ -1,6 +1,9 @@
 package uk.ac.addressmanger.model;
 
+ 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -10,10 +13,12 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.Version;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 
 
 @Entity
@@ -34,6 +39,12 @@ public class User {
 
     @OneToMany(mappedBy = "user")
     private Set<UserRole> roles;
+  
+    @OneToMany(mappedBy = "user")
+    private List<Address> addresses;
+    
+    //@OneToMany(mappedBy = "user")
+    //private List<Account> accounts = new ArrayList<Account>();
 
     public static User createUser(String username, String email, String password) {
         User user = new User();
@@ -42,9 +53,8 @@ public class User {
         user.email = email;
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         user.password = passwordEncoder.encode(password);
+        user.addresses = new ArrayList<Address>();
         
-        //user.password = PasswordCrypto.getInstance().encrypt(password);
-
         if(user.roles == null) {
             user.roles = new HashSet<UserRole>();
         }
@@ -92,6 +102,8 @@ public class User {
         this.email = email;
     }
 
+    //@XmlTransient
+    @JsonIgnore
     public Set<UserRole> getRoles() {
         return roles;
     }
@@ -99,4 +111,14 @@ public class User {
     public void setRoles(Set<UserRole> roles) {
         this.roles = roles;
     }
+
+    //@XmlTransient
+    @JsonIgnore
+    public List<Address> getAddresses() {
+		return addresses;
+	}
+    
+	public void setAddresses(List<Address> addresses) {
+		this.addresses = addresses;
+	}
 }

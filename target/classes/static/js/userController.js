@@ -17,8 +17,9 @@ userModule.controller('navigation', function($rootScope, $scope, $http, $locatio
 		//Authenticate with server
 		$http.get('/user', { headers : headers})
 		.success(function(data) {
-			if (data.name) {
+			if (data.id != -1) {
 				$rootScope.authenticated = true;
+				$scope.userId = data.id;
 			} 
 			else {
 				$rootScope.authenticated = false;

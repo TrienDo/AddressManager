@@ -35,8 +35,15 @@ public class AddressManagerApplication{
     }
     
     @RequestMapping("/user")//login
-	public Principal user(Principal user) {
-		return user;
+	//public Principal user(Principal user) {
+    public ReturnMessage user(Principal user) {
+    	if(user!=null)
+    	{
+    		User loggingUser = userDao.findByUsername(user.getName());
+    		return new ReturnMessage(loggingUser.getId(),loggingUser.getUsername(),loggingUser.getEmail());
+    	}
+    	else
+    		return new ReturnMessage(-1,"Invalid Username/password","");
 	}
     @RequestMapping(value = "/user", method = RequestMethod.POST) //register   
    	public ReturnMessage addUser(@RequestBody final User user) {
