@@ -2,8 +2,8 @@
 //Declare a module
 var addressModule = angular.module('addressModule', []);
 
-addressModule.controller('addressController', function($scope, $http, $route) {
-	$scope.addressAPI = '/users/' + $scope.userId + '/addresses/';
+addressModule.controller('addressController',['$scope', '$http', '$route','settings', function($scope, $http, $route, settings) {
+	$scope.addressAPI = settings.restApiBase;
 	//onload -> Get all addresses
 	$http.get($scope.addressAPI).success(function(data) {
 		$scope.addresses = data;
@@ -68,5 +68,5 @@ addressModule.controller('addressController', function($scope, $http, $route) {
 		}	
 		
 	};
-});
+}]);
 

@@ -2,7 +2,7 @@
 //Declare a module
 var userModule = angular.module('userModule', []);
 
-userModule.controller('navigation', function($rootScope, $scope, $http, $location, $route) {
+userModule.controller('navigation',['$rootScope', '$scope', '$http', '$location', '$route', 'settings', function($rootScope, $scope, $http, $location, $route, settings) {
 
 	$scope.tab = function(route) {
 		return $route.current && route === $route.current.controller;
@@ -18,7 +18,11 @@ userModule.controller('navigation', function($rootScope, $scope, $http, $locatio
 		$http.get('/user', { headers : headers})
 		.success(function(data) {
 			if (data.id != -1) {
-				$rootScope.authenticated = true;				
+				$rootScope.authenticated = true;
+				settings.userId = data.id;
+				settings.restApiBase = '/users/' + data.id + '/addresses/';
+				settings.username = data.subject,
+				settings.userEmail = data.text
 			} 
 			else {
 				$rootScope.authenticated = false;
@@ -63,13 +67,17 @@ userModule.controller('navigation', function($rootScope, $scope, $http, $locatio
 		});
 	}
 
-});
+}]);
 
-userModule.controller('home', function($scope, $http) {
+userModule.controller('home',['$scope', 'settings', function($scope, settings) {
+	$scope.greeting = settings;
+}]);
+
+/*userModule.controller('home', function($scope, $http) {
 	$http.get('/resource').success(function(data) {
 		$scope.greeting = data;
 	});
-});
+});*/
 
 userModule.controller('register', function($scope, $http, $route) {
 	$scope.register = function() {					
@@ -81,7 +89,10 @@ userModule.controller('register', function($scope, $http, $route) {
 	
 		$http.post('/user', userObj).success(function(data) {
 			//$location.path("/login");
-			$scope.error = data.id;
+			if(data.id == -1)
+				$scope.error = true;
+			else 
+				$scope.error = false;
 			$scope.messageContent = data.text;			
 		});
 	};		
