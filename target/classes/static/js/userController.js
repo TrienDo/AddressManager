@@ -20,7 +20,7 @@ userModule.controller('navigation',['$rootScope', '$scope', '$http', '$location'
 			if (data.id != -1) {
 				$rootScope.authenticated = true;
 				settings.userId = data.id;
-				settings.restApiBase = '/users/' + data.id + '/addresses/';
+				settings.restApiBase = '/users/' + data.id;
 				settings.username = data.subject,
 				settings.userEmail = data.text
 			} 

@@ -3,7 +3,8 @@
 var addressManagerApp = angular.module('addressManager', [
 	'ngRoute',
 	'userModule',
-	'addressModule'                                                          
+	'addressModule',
+	'accountModule'
 ]);
 
 addressManagerApp.config(function($routeProvider, $httpProvider) {
@@ -20,6 +21,9 @@ addressManagerApp.config(function($routeProvider, $httpProvider) {
 	}).when('/addresses', {
 		templateUrl : 'address.html',
 		controller : 'addressController'
+	}).when('/accounts', {
+		templateUrl : 'account.html',
+		controller : 'accountController'
 	}).otherwise('/');
 
 	$httpProvider.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';

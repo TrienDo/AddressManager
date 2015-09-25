@@ -16,7 +16,7 @@
 	</table>
 	
 	<hr/>
-	<form novalidate ng-submit="submit()">
+	<form novalidate ng-submit="submit()" ng-init="address.type=0">
 	    Property number/name:<br>
 	    <input type="text" ng-model="address.number"><br>
 	    Street:<br>
@@ -27,6 +27,12 @@
 	    <input type="text" ng-model="address.postcode"><br>
 	    Country:<br>
 	    <input type="text" ng-model="address.country"><br>
+	    Start date:<br>
+	    <input type="date" ng-model="address.startDate"><br>
+	    End date:<br>
+	    <input type="date" ng-model="address.endDate"><br>
+	    Address type:<br>
+	    <input type="radio" ng-model="address.type"   value="0"> Home <input type="radio" ng-model="address.type" value="1"> Office<br>
 	    <br>
 	    <button class="btn btn-success" ng-click="reset()"><span class="glyphicon glyphicon-refresh"></span>  Reset</button>
 	    <button type="submit" class="btn btn-success" ng-disabled="error || incomplete"><span class="glyphicon glyphicon-save"></span>  Save Address</button>	    

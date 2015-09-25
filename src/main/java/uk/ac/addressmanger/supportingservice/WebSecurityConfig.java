@@ -42,7 +42,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		.authenticated()
 		.and().csrf()
 		.csrfTokenRepository(csrfTokenRepository()).and()
-		.addFilterAfter(csrfHeaderFilter(), CsrfFilter.class);
+		.addFilterAfter(new CsrfHeaderFilter(), CsrfFilter.class);
     }
 
     @Override
@@ -56,7 +56,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     	PasswordEncoder encoder = new BCryptPasswordEncoder();
 		return encoder;
     }
-    
+    /*
     private Filter csrfHeaderFilter() {
 		return new OncePerRequestFilter() {
 			@Override
@@ -78,7 +78,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				filterChain.doFilter(request, response);
 			}
 		};
+		
 	}
+	*/
 
 	private CsrfTokenRepository csrfTokenRepository() {
 		HttpSessionCsrfTokenRepository repository = new HttpSessionCsrfTokenRepository();

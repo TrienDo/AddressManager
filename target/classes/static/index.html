@@ -18,6 +18,7 @@
 			<li ng-show="!authenticated"><a href="#/register">Register</a></li>
 			<li ng-show="authenticated"><a href="" ng-click="logout()">Logout</a></li>
 			<li ng-show="authenticated"><a href="#/addresses">My Addresses</a></li>
+			<li ng-show="authenticated"><a href="#/accounts">My Accounts</a></li>
 		</ul>
 	</div>
 	<div ng-view class="container"></div>	
@@ -26,5 +27,6 @@
 	<script src="js/addressManagerApp.js"></script>
 	<script src="js/userController.js"></script>
 	<script src="js/addressController.js"></script>
+	<script src="js/accountController.js"></script>
 </body>
 </html>

@@ -3,7 +3,7 @@
 var addressModule = angular.module('addressModule', []);
 
 addressModule.controller('addressController',['$scope', '$http', '$route','settings', function($scope, $http, $route, settings) {
-	$scope.addressAPI = settings.restApiBase;
+	$scope.addressAPI = settings.restApiBase  + '/addresses/';
 	//onload -> Get all addresses
 	$http.get($scope.addressAPI).success(function(data) {
 		$scope.addresses = data;

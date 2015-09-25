@@ -15,62 +15,60 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import uk.ac.addressmanger.dataservice.AddressRepository;
+import uk.ac.addressmanger.dataservice.AccountRepository;
 import uk.ac.addressmanger.dataservice.UserRepository;
-import uk.ac.addressmanger.model.Address;
+import uk.ac.addressmanger.model.Account;
 import uk.ac.addressmanger.model.User;
 
 @RestController
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-//@RequestMapping("/addresses")
-//@RequestMapping("/")//sub-resource of user
-@RequestMapping("/users/{userId}/addresses")
-public class AddressResource {
+@RequestMapping("/users/{userId}/accounts")
+public class AccountResource {
  	@Autowired
 	private UserRepository userDao;
  	@Autowired
-	private AddressRepository addressDao;
+	private AccountRepository accountDao;
 		
 	
 	@RequestMapping(method = RequestMethod.GET)
-   	public List<Address> getAddresses(@PathVariable("userId") long id) {
+   	public List<Account> getAccounts(@PathVariable("userId") long id) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User user = userDao.findByUsername(auth.getName());
-		return user.getAddresses();
+		return user.getAccounts();
    	}
 	
 	@RequestMapping(method = RequestMethod.POST)   
-   	public List<Address> addAddress(@PathVariable("userId") long id, @RequestBody final Address address) {
+   	public List<Account> addAccount(@PathVariable("userId") long id, @RequestBody final Account account) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User user = userDao.findByUsername(auth.getName());
-		user.getAddresses().add(address);
-		address.setUser(user);
-		addressDao.save(address);
+		user.getAccounts().add(account);
+		account.setUser(user);
+		accountDao.save(account);
 		userDao.save(user);
-    	return user.getAddresses();
+    	return user.getAccounts();
    	}
     
-	@RequestMapping(value ="/{addressId}", method = RequestMethod.PUT)//Order of params is important: PathVariable must stand before @RequestBody
-   	public List<Address> updateAddress(@PathVariable("userId") long userId, @PathVariable("addressId") long addressId, @RequestBody final Address address) {
+	@RequestMapping(value ="/{accountId}", method = RequestMethod.PUT)//Order of params is important: PathVariable must stand before @RequestBody
+   	public List<Account> updateAccount(@PathVariable("userId") long userId, @PathVariable("accountId") long accountId, @RequestBody final Account account) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User user = userDao.findByUsername(auth.getName());
-    	address.setId(addressId);
-    	address.setUser(user);
-    	addressDao.save(address);
-    	return user.getAddresses();
+		account.setId(accountId);
+		account.setUser(user);
+		accountDao.save(account);
+    	return user.getAccounts();
    	} 
 	
-	@RequestMapping(value ="/{addressId}", method = RequestMethod.DELETE)
-   	public List<Address> deleteAddress(@PathVariable("userId") long userId, @PathVariable("addressId") long addressId) {    	 
-    	addressDao.delete(addressId);
+	@RequestMapping(value ="/{accountId}", method = RequestMethod.DELETE)
+   	public List<Account> deleteAccount(@PathVariable("userId") long userId, @PathVariable("accountId") long addressId) {    	 
+		accountDao.delete(addressId);
     	Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		User user = userDao.findByUsername(auth.getName());
-		return user.getAddresses();
+		return user.getAccounts();
    	} 
 	
-	@RequestMapping(value ="/{addressId}", method = RequestMethod.GET)//User PathVar rather than PathParam
-   	public Address getOneAddress(@PathVariable("addressId") long id) {
-    	return (Address) addressDao.findById(id);
+	@RequestMapping(value ="/{accountId}", method = RequestMethod.GET)//User PathVar rather than PathParam
+   	public Account getOneAccount(@PathVariable("accountId") long id) {
+    	return (Account) accountDao.findById(id);
    	}
 }

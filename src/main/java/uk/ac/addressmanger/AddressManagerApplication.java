@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import uk.ac.addressmanger.dataservice.UserRepository;
+import uk.ac.addressmanger.model.Address;
 import uk.ac.addressmanger.model.ReturnMessage;
 import uk.ac.addressmanger.model.User;
 
@@ -63,5 +64,10 @@ public class AddressManagerApplication{
 		model.put("content", "Hello World");
 		return model;
 	}
+	
+	@RequestMapping(value = "/addressOne", method = RequestMethod.GET)
+   	public Address  getAddressOne() {    	
+		return new Address("21","Connaught Road", "Lancaster", "LA 14BQ", "UK");
+   	}  
 }
 

@@ -43,8 +43,8 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<Address> addresses;
     
-    //@OneToMany(mappedBy = "user")
-    //private List<Account> accounts = new ArrayList<Account>();
+    @OneToMany(mappedBy = "user")
+    private List<Account> accounts = new ArrayList<Account>();
 
     public static User createUser(String username, String email, String password) {
         User user = new User();
@@ -121,4 +121,14 @@ public class User {
 	public void setAddresses(List<Address> addresses) {
 		this.addresses = addresses;
 	}
+
+	@JsonIgnore
+	public List<Account> getAccounts() {
+		return accounts;
+	}
+
+	public void setAccounts(List<Account> accounts) {
+		this.accounts = accounts;
+	}	
+	
 }
