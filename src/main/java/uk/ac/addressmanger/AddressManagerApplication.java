@@ -1,6 +1,7 @@
 package uk.ac.addressmanger;
 
 import java.security.Principal;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -67,7 +68,7 @@ public class AddressManagerApplication{
 	
 	@RequestMapping(value = "/addressOne", method = RequestMethod.GET)
    	public Address  getAddressOne() {    	
-		return new Address("21","Connaught Road", "Lancaster", "LA 14BQ", "UK");
+		return new Address("21","Connaught Road", "Lancaster", "LA 14BQ", "UK", new Date(), new Date(), 1);
    	}  
 }
 

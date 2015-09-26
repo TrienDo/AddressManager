@@ -4,17 +4,22 @@ var accountModule = angular.module('accountModule', []);
 
 accountModule.controller('accountController',['$scope', '$http', '$route','settings', function($scope, $http, $route, settings) {
 	$scope.accountAPI = settings.restApiBase  + '/accounts/';
+	$scope.addressAPI = settings.restApiBase  + '/addresses/';
+	
 	//onload -> Get all accounts
 	$http.get($scope.accountAPI).success(function(data) {
 		$scope.accounts = data;
-		$scope.selectedId = -1;//mark to know which actions: -1: new address, else: edit an address with selectedId
-		
+		$scope.selectedId = -1;//mark to know which actions: -1: new address, else: edit an address with selectedId		
 		//Create a new blank address
 		$scope.account = {
 			name : "",
 			website : "",
 			description : ""
-		};
+		};		
+	});
+	//Get all addresses
+	$http.get($scope.addressAPI).success(function(data) {
+		$scope.addresses = data;			
 	});
 	
 	//when edit button is clicked
